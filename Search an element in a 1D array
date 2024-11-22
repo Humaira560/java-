@@ -1,0 +1,28 @@
+//Search an element in a 1D array
+import java.util.Scanner;
+class Main {
+    public static void main(String[] args){
+        Scanner input=new Scanner(System.in);
+        System.out.println("Enter the array size: ");
+        int n=input.nextInt();
+        
+        int[] arr=new int[n];
+         System.out.println("Enter the array elements : ");
+         for(int i=0;i<n;i++){
+             arr[i]=input.nextInt();
+         }
+        
+        System.out.print("Enter the element you want to search: ");
+        int want=input.nextInt();
+        
+        boolean found = false;//At the start, you don't know if the element has been found, so you initialize found to false
+        for(int i=0;i<n;i++){
+            if(arr[i]==want){
+                
+                System.out.print("Searched element "+want +" is found in index " +i);
+                found=true;
+                break;
+            }
+        }
+    }
+}
