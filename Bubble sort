@@ -1,0 +1,27 @@
+class Main {
+    public static void main(String[] args) {
+        int[] arr = {1, 5, 6, 2, 3, 8, 4, 7, 9};  // Initial array
+        int len = arr.length;
+        bubbleSort(arr, len);  // Call the bubbleSort method with array and length
+        
+        // Print the sorted array
+        for (int i=0; arr[i]<len;i++) {
+            System.out.print(arr[i] + " ");
+        }
+    }
+
+    public static void bubbleSort(int[] arr, int len) {
+        int temp;  // Initialize temp here in the bubbleSort method
+        // Perform the bubble sort
+        for (int i = 0; i < len - 1; i++) {
+            for (int j = 0; j < len - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // Swap elements if they are in the wrong order
+                    temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+}
