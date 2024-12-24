@@ -1,0 +1,187 @@
+
+// User.java
+import java.util.ArrayList;
+import java.util.List;
+
+class User {
+    private String username;
+    private String password;
+    private List<Post> posts;  // A list to store all posts made by the user
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.posts = new ArrayList<>();  // Initialize the posts list
+    }
+
+    public void createPost(String content) {
+        Post newPost = new Post(this.username, content);  // Create a new post
+        posts.add(newPost);  // Add the new post to the user's posts list
+    }
+
+    public void displayPosts() {
+        System.out.println("Posts of " + username + ":");
+        for (Post post : posts) {
+            post.displayPost();
+        }
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
+
+//AdminUser.java
+
+class AdminUser extends User {
+    public AdminUser(String username, String password) {
+        super(username, password);  // Calls the constructor of User class
+    }
+
+    // Admins can delete posts, a special functionality for admins
+    public void deletePost(Post post) {
+        System.out.println("Admin deleted the post: " + post.getContent());
+    }
+
+    // Override the displayPosts method to add extra info
+    @Override
+    public void displayPosts() {
+        super.displayPosts();  // Call the base method
+        System.out.println("Admin posts are displayed with special privileges.");
+    }
+}
+// Post.java
+import java.time.LocalDateTime;
+
+class Post {
+    private String username;
+    private String content;
+    private LocalDateTime timestamp;
+
+    public Post(String username, String content) {
+        this.username = username;
+        this.content = content;
+        this.timestamp = LocalDateTime.now();  // Set timestamp to current time
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void displayPost() {
+        System.out.println("[" + timestamp + "] " + username + ": " + content);
+    }
+}
+// main.java
+
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SimpleSocialMediaApp {
+    private List<User> users;  // List of users in the system
+    private User loggedInUser;  // Currently logged-in user
+
+    public SimpleSocialMediaApp() {
+        users = new ArrayList<>();  // Initialize the users list
+        loggedInUser = null;  // Initially, no user is logged in
+    }
+
+    public void createUser(String username, String password, boolean isAdmin) {
+        User newUser;
+        if (isAdmin) {
+            newUser = new AdminUser(username, password);  // Create AdminUser
+        } else {
+            newUser = new User(username, password);  // Create regular User
+        }
+        users.add(newUser);  // Add the new user to the list
+        System.out.println("User created successfully!");
+    }
+
+    public boolean login(String username, String password) {
+        for (User user : users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                loggedInUser = user;
+                System.out.println("Logged in successfully as " + username);
+                return true;
+            }
+        }
+        System.out.println("Invalid username or password.");
+        return false;
+    }
+
+    public void createPost(String content) {
+        if (loggedInUser != null) {
+            loggedInUser.createPost(content);  // User creates a post
+            System.out.println("Post created successfully!");
+        } else {
+            System.out.println("Please log in first.");
+        }
+    }
+
+    public void viewPosts() {
+        if (loggedInUser != null) {
+            loggedInUser.displayPosts();  // Display posts of the logged-in user
+        } else {
+            System.out.println("Please log in first.");
+        }
+    }
+
+    public static void main(String[] args) {
+        SimpleSocialMediaApp app = new SimpleSocialMediaApp();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            // Display menu options
+            System.out.println("\n1. Create Account");
+            System.out.println("2. Log In");
+            System.out.println("3. Create Post");
+            System.out.println("4. View Posts");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+
+            switch (choice) {
+                case 1:
+                    // Create new user
+                    System.out.print("Enter username: ");
+                    String username = scanner.nextLine();
+                    System.out.print("Enter password: ");
+                    String password = scanner.nextLine();
+                    System.out.print("Is this user an admin? (true/false): ");
+                    boolean isAdmin = scanner.nextBoolean();
+                    app.createUser(username, password, isAdmin);
+                    break;
+                case 2:
+                    // Log in
+                    System.out.print("Enter username: ");
+                    String loginUsername = scanner.nextLine();
+                    System.out.print("Enter password: ");
+                    String loginPassword = scanner.nextLine();
+                    app.login(loginUsername, loginPassword);
+                    break;
+                case 3:
+                    // Create a post
+                    System.out.print("Enter post content: ");
+                    String content = scanner.nextLine();
+                    app.createPost(content);
+                    break;
+                case 4:
+                    // View posts
+                    app.viewPosts();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid option, try again.");
+            }
+        }
+    }
+}
+
